@@ -10,12 +10,20 @@ public class SpiritMovementBehavior : MonoBehaviour {
     private NavMeshAgent agent;
 
     // Basic required fields filled with dummy variables
+    [Header("Speed")]
+    [Tooltip("How fast the AI moves when the player is undetected")]
     public float wanderMovementSpeed = 10f;
+    [Tooltip("How fast the AI moves when the player is detected")]
     public float chaseMovementSpeed = 15f;
+
+    [Header("Detection")]
+    [Tooltip("The general range of detection for the AI to notice the player")]
     public float basicDetectionRange = 10f;
+    [Tooltip("The visual range of detection for the AI to notice the player")]
     public float visualDetectionRange = 15f;
-    public float visualDetectionArc = 50f; // the ange of the arc
-    public LayerMask visualDetectionIgnoreMask;
+    [Tooltip("The visual arc of detection for the AI to notice the player")]
+    public float visualDetectionArc = 50f;
+    [Tooltip("The layer that the player model resides on")]
     public int playerLayerMask = 7;
 
     // A queue to store the movement plans
@@ -23,10 +31,13 @@ public class SpiritMovementBehavior : MonoBehaviour {
     private NavMeshPath currentPath;
 
     // Cooldown fields subject to change
+    [Header("Wander")]
+    [Tooltip("The cooldown in seconds that the AI waits before wander behavior")]
     public float wanderCooldown = 4;
     private float currentWanderCooldown = 0;
 
     // Wander fields that determine wander selection
+    [Tooltip("The radius of the circle used to randomly select a wander destination")]
     public float wanderRadius = 10f;
     private Vector3 wanderCenter;
 
@@ -171,16 +182,16 @@ public class SpiritMovementBehavior : MonoBehaviour {
     }
 
     // DEBUG VISUALS
-    void OnDrawGizmosSelected() {
-        UnityEditor.Handles.color = Color.red;
-        UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.up, basicDetectionRange);
-        UnityEditor.Handles.DrawWireArc (transform.position, Vector3.up, Vector3.forward, visualDetectionArc/2, visualDetectionRange);
-        UnityEditor.Handles.DrawWireArc (transform.position, Vector3.up, Vector3.forward, -visualDetectionArc/2, visualDetectionRange);
+    //void OnDrawGizmosSelected() {
+    //    UnityEditor.Handles.color = Color.red;
+    //    UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.up, basicDetectionRange);
+    //    UnityEditor.Handles.DrawWireArc (transform.position, Vector3.up, Vector3.forward, visualDetectionArc/2, visualDetectionRange);
+    //    UnityEditor.Handles.DrawWireArc (transform.position, Vector3.up, Vector3.forward, -visualDetectionArc/2, visualDetectionRange);
 
-        Vector3 viewAngleA = DirFromAngle (-visualDetectionArc / 2, false);
-        Vector3 viewAngleB = DirFromAngle (visualDetectionArc / 2, false);
+    //    Vector3 viewAngleA = DirFromAngle (-visualDetectionArc / 2, false);
+    //    Vector3 viewAngleB = DirFromAngle (visualDetectionArc / 2, false);
 
-        UnityEditor.Handles.DrawLine (transform.position, transform.position + viewAngleA * visualDetectionRange);
-        UnityEditor.Handles.DrawLine (transform.position, transform.position + viewAngleB * visualDetectionRange);
-    }
+    //    UnityEditor.Handles.DrawLine (transform.position, transform.position + viewAngleA * visualDetectionRange);
+    //    UnityEditor.Handles.DrawLine (transform.position, transform.position + viewAngleB * visualDetectionRange);
+    //}
 }
