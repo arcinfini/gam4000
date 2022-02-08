@@ -41,6 +41,10 @@ public class SpiritMovementBehavior : MonoBehaviour {
     public float wanderRadius = 10f;
     private Vector3 wanderCenter;
 
+    [Tooltip("The list of waypoints the AI uses to travel between its patrol")]
+    public Transform[] waypoints;
+    private int currentPoint = 0;
+
     // Detection values
     //private bool hasDetectedPlayer = false;
 
@@ -100,7 +104,7 @@ public class SpiritMovementBehavior : MonoBehaviour {
             Vector3 destination = SelectWanderDestination();
             agent.CalculatePath(destination, currentPath);
             if (currentPath.status == NavMeshPathStatus.PathPartial) {
-                //Debug.Log("Path Initialization failed: Returing");
+                Debug.Log("Path Initialization failed: Returing");
                 return;
             }
 
@@ -108,6 +112,26 @@ public class SpiritMovementBehavior : MonoBehaviour {
             movementQueue.Enqueue(destination);
         }
     }
+
+    private Vector3 SelectWanderDestination()
+    {
+        if (waypoints.Length >= 1)
+        {
+            Debug.Log("Using Waypoint System");
+            currentPoint = (++currentPoint) % waypoints.Length;
+            return waypoints[currentPoint].position;
+        }
+
+        Vector2 destination2D = Random.insideUnitCircle * wanderRadius;
+        Vector3 destination = new Vector3(destination2D.x, 0, destination2D.y);
+        destination += wanderCenter;
+        Debug.Log("Using radius System");
+        return destination;
+    }
+
+    // Selects a random position within the wander circle
+    // Possible Problem: can not walk up stairs
+
 
     // Returns true if the gameobject passed is within the view
     // arc and has a clear path of vision to the gameobject
@@ -147,15 +171,6 @@ public class SpiritMovementBehavior : MonoBehaviour {
             return false;
         }
         return true;
-    }
-
-    // Selects a random position within the wander circle
-    // Possible Problem: can not walk up stairs
-    private Vector3 SelectWanderDestination() {
-        Vector2 destination2D = Random.insideUnitCircle * wanderRadius;
-        Vector3 destination = new Vector3(destination2D.x, 0, destination2D.y);
-        destination += wanderCenter;
-        return destination;
     }
 
 	// Casts a physics sphere in the detection radius to detect
