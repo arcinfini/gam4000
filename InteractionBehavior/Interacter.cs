@@ -1,3 +1,16 @@
+/*
+
+READ ME:
+
+This behavior controls the playeres interaction with the surrounding objects
+in the environment. This is meant to be a component of the player gameonject
+
+General Setup:
+	1. Set the player's camera to the cameraObject gameobject
+
+*/
+
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

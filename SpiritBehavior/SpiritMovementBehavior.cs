@@ -1,3 +1,19 @@
+/*
+
+READ ME:
+
+This behavior is meant to be directly attached to the spirit gameobject
+and controls the movement of the AI.
+To setup
+    1. assign the player gameobject to the player field
+    2. make sure nav mesh is baked
+    3. assign the PlayerLayerMask field is set to the layer the player
+    is on
+    4. If the patrol behavior is meant to be used, assign waypoints to
+    the waypoint field
+
+*/
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
