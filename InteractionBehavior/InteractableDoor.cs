@@ -16,7 +16,7 @@ public class InteractableDoor : Interactable {
 	public int KeyNumber { get; }
 	private bool state { get; private set;}= false;
 
-	public void Interact() {
+	public void Interact(GameObject player) {
 		if (state == false) OpenDoor();
 		else CloseDoor();
 	}
