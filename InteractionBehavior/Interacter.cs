@@ -14,10 +14,10 @@ using UnityEngine;
 
 public class Interacter : MonoBehaviour {
 
-	private GameObject cameraObject;
+	private Camera cameraObject;
 
 	public void Awake() {
-		camereaObject = Camera.main;
+		cameraObject = Camera.main;
 	}
 
 	public void Update () {
@@ -34,7 +34,7 @@ public class Interacter : MonoBehaviour {
 			if (didHit) {
 				Interactable interactable;
 				bool found = hit.collider.gameObject.TryGetComponent(out interactable);
-				if (found) interactable.Interact(gameobject);
+				if (found) interactable.Interact(gameObject);
 			}
 		}
 	}
