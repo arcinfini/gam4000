@@ -81,7 +81,7 @@ public class SpiritMovementBehavior : MonoBehaviour {
         bool canDetectPlayer = IsPlayerDetectable();
         if (canDetectPlayer || canSeePlayer) {
             string reason = (canSeePlayer) ? "Can See Player" : "Can Detect Player";
-            Debug.Log(reason);
+            //Debug.Log(reason);
 
             movementQueue.Clear();
             movementQueue.Enqueue(player.transform.position);
@@ -120,7 +120,7 @@ public class SpiritMovementBehavior : MonoBehaviour {
             Vector3 destination = SelectWanderDestination();
             agent.CalculatePath(destination, currentPath);
             if (currentPath.status == NavMeshPathStatus.PathPartial) {
-                Debug.Log("Path Initialization failed: Returing");
+                //Debug.Log("Path Initialization failed: Returing");
                 return;
             }
 
@@ -133,7 +133,7 @@ public class SpiritMovementBehavior : MonoBehaviour {
     {
         if (waypoints.Length >= 1)
         {
-            Debug.Log("Using Waypoint System");
+            //Debug.Log("Using Waypoint System");
             currentPoint = (++currentPoint) % waypoints.Length;
             return waypoints[currentPoint].position;
         }
@@ -141,7 +141,7 @@ public class SpiritMovementBehavior : MonoBehaviour {
         Vector2 destination2D = Random.insideUnitCircle * wanderRadius;
         Vector3 destination = new Vector3(destination2D.x, 0, destination2D.y);
         destination += wanderCenter;
-        Debug.Log("Using radius System");
+        //Debug.Log("Using radius System");
         return destination;
     }
 
@@ -183,7 +183,7 @@ public class SpiritMovementBehavior : MonoBehaviour {
         currentWanderCooldown -= Time.deltaTime;
 
         if (currentWanderCooldown <= 0) {
-            Debug.Log("Wander cooldown done");
+            //Debug.Log("Wander cooldown done");
             return false;
         }
         return true;
@@ -192,17 +192,9 @@ public class SpiritMovementBehavior : MonoBehaviour {
 	// Casts a physics sphere in the detection radius to detect
 	// if the player is in the range.
     private bool IsPlayerDetectable() {
-        Collider[] collisions = Physics.OverlapSphere(transform.position, basicDetectionRange, 1 << playerLayerMask);
-        bool canDetectPlayer = collisions.Length >= 1;
+        float distance = (transform.position - player.transform.position).magnitude;
 
-        if (canDetectPlayer) {
-            Vector3 direction = (transform.position - player.transform.position).normalized;
-            float distance = (transform.position - player.transform.position).magnitude;
-
-            Debug.DrawRay(transform.position, direction * distance, Color.red);
-        }
-
-        return canDetectPlayer;
+        return distance < basicDetectionRange;
     }
 
     public Vector3 DirFromAngle(float angleInDegrees, bool angleIsGlobal) {
@@ -211,18 +203,4 @@ public class SpiritMovementBehavior : MonoBehaviour {
         }
         return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad),0,Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
     }
-
-    // DEBUG VISUALS
-    //void OnDrawGizmosSelected() {
-    //    UnityEditor.Handles.color = Color.red;
-    //    UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.up, basicDetectionRange);
-    //    UnityEditor.Handles.DrawWireArc (transform.position, Vector3.up, Vector3.forward, visualDetectionArc/2, visualDetectionRange);
-    //    UnityEditor.Handles.DrawWireArc (transform.position, Vector3.up, Vector3.forward, -visualDetectionArc/2, visualDetectionRange);
-
-    //    Vector3 viewAngleA = DirFromAngle (-visualDetectionArc / 2, false);
-    //    Vector3 viewAngleB = DirFromAngle (visualDetectionArc / 2, false);
-
-    //    UnityEditor.Handles.DrawLine (transform.position, transform.position + viewAngleA * visualDetectionRange);
-    //    UnityEditor.Handles.DrawLine (transform.position, transform.position + viewAngleB * visualDetectionRange);
-    //}
 }

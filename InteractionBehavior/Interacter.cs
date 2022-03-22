@@ -14,28 +14,59 @@ using UnityEngine;
 
 public class Interacter : MonoBehaviour {
 
-	private Camera cameraObject;
+    public GameObject message;
+    public float interactDistance = 1f;
 
-	public void Awake() {
-		cameraObject = Camera.main;
-	}
+    private Interactable[] items;
+    private Camera cameraObject;
 
-	public void Update () {
-		if (Input.GetKey(KeyCode.E)) {
-			Transform cTransform = GetComponent<Camera>().transform;
-			bool didHit = Physics.Raycast(
-				cTransform.position, 
-				cTransform.forward,
-				out RaycastHit hit
-			);
+    public void Awake() {
+        items = FindObjectsOfType(typeof(Interactable)) as Interactable[];
+        cameraObject = Camera.main;
+    }
 
-			// Check if target has an interactable script
-			// Call the method
-			if (didHit) {
-				Interactable interactable;
-				bool found = hit.collider.gameObject.TryGetComponent(out interactable);
-				if (found) interactable.Interact(gameObject);
-			}
-		}
-	}
+    public void Update () {
+        if (!WithinInteractableDistance()) return;
+
+        // Check if target has an interactable script
+        // Call the method
+        if (CastToCamera(out RaycastHit hit)) {
+            Interactable interactable;
+            bool found = hit.collider.gameObject.TryGetComponent(out interactable);
+
+            message.SetActive(found);
+
+            if (found && Input.GetKeyDown(KeyCode.E)) {
+                interactable.Interact(gameObject);
+            }
+        } else {
+            message.SetActive(false);
+        }
+    }
+
+    // Checks all interactable items to determine if one is within range
+    public bool WithinInteractableDistance() {
+        foreach (Interactable item in items) {
+            float distance = Vector3.Distance(item.transform.position, transform.position);
+
+            if (distance <= interactDistance) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // Sends a raycast from the cameras position directly outward
+    public bool CastToCamera(out RaycastHit hit) {
+        Transform cTransform = cameraObject.transform;
+        bool didHit = Physics.Raycast(
+            cTransform.position,
+            cTransform.forward,
+            out hit,
+            interactDistance
+        );
+
+        return hit;
+    }
 }

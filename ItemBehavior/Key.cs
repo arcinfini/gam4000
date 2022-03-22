@@ -10,19 +10,16 @@ has the ability to open.
 
 */
 
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-public class Key : MonoBehaviour, Item, Interactable {
+public class Key : Interactable, Item {
     [Tooltip("The corresponding number id of the door this key will open")]
-    public int number {private set; get;}
+    public int number;
 
-    public Key(int number) {
-        this.number = number;
-    }
-
-    public void Interactable(GameObject player) {
-        Pocket pocket = player.GetComponent<Pocket>();
-
-        pocket.GiveKey(this);
+    public void Interact(GameObject player) {
+        Pocket.GiveKey(this);
         gameObject.SetActive(false);
     }
 }

@@ -15,16 +15,16 @@ using UnityEngine;
 
 public class Pocket {
     
-    private static ArrayList<Key> keys = new ArrayList<Key>();
+    private static ArrayList keys = new ArrayList();
 
     public static bool HasKey(int keyNumber) {
-        foreach (Key key in keys) {
-            if (key.number == keyNumber) { return true; }
+        foreach (int key in keys) {
+            if (key == keyNumber) { return true; }
         }
         return false;
     }
 
     public static void GiveKey(Key key) {
-        keys.Add(key);
+        keys.Add(key.number);
     }
 }
